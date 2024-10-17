@@ -160,6 +160,20 @@ const createDayCells = function () {
       // non è più disponibile all'interno della funzione; per risolvere,
       // passiamo la i alla funzione COME PARAMETRO, in modo che il suo
       // i + 1 continui ad essere definito
+
+      // EXTRA POST LEZIONE
+      // sempre al click di una giornata, nel caso ci siano eventi da mostrare
+      // facciamo comparire la sezione "appointments"
+      // appointments[i] // è l'array degli eventi della giornata su cui ho cliccato
+      if (appointments[i].length > 0) {
+        // significa che in questa giornata ci sono degli eventi salvati!
+        // li devo mostrare...
+        showAppointments(i)
+      } else {
+        // la giornata che ho cliccato non ha eventi!
+        // ri-nascondiamo per sicurezza la sezione appointments of the day
+        document.getElementById('appointments').style.display = 'none'
+      }
     })
 
     // abbiamo creato la cella, inseriamoci il contenuto
@@ -200,6 +214,25 @@ const handleFormSubmit = function (e) {
 
   // ora creiamo la stringa completa da salvare nel "cassetto"
   const eventString = meetingTime + ' - ' + meetingName // '15:30 - Dentista'
+
+  // EXTRA POST LEZIONE
+  // trovo tra tutte le celle quella selezionata (attiva)
+  const dayCellNode = document.querySelector('.selected')
+
+  // controllo se su questa cella è già presente un elemento "dot"
+  const isDot = dayCellNode.querySelector('.dot')
+
+  // nel caso nella cella non ci sia già presente un elemento "dot", non la creeremo di nuovo
+  if (!isDot) {
+    // solo se nella cella non è già stato creato un elemento "dot"
+
+    // creiamo uno span che diventerà l'elemento "dot"
+    const dot = document.createElement('span')
+    // aggiungiamo la classe CSS "dot" per applicargli lo stile
+    dot.classList.add('dot')
+    // appendiamo l'elemento "dot" all'interno della cella selezionata
+    dayCellNode.appendChild(dot)
+  }
 
   // abbiamo salvato correttamente la stringa con l'ora e il nome dell'evento
   // ci manca solo da capire DOVE (in quale cassetto) salvarla

@@ -178,6 +178,7 @@ form button {
 
 #appointments {
   display: none;
+  margin-bottom: 2rem;
 }
 
 #appointmentsList {
