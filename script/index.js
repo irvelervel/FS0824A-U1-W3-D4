@@ -27,6 +27,25 @@ const monthNames = [
 //     30
 // ]
 
+// DOVE VERRANNO SALVATI GLI APPUNTAMENTI DEL CALENDARIO?
+// una "cassettiera"
+// un array con tot elementi (30, 31, 28, 29)
+// in ogni elemento (cassetto) corrispondente alla giornata, potremmo stivare
+// INFINITI elementi
+
+// ottobre sarà più o meno così
+// [
+//     [], [], [], [], [], [], [], [], [], [],
+//     [], [], [], [], [], [], [], [], [], [],
+//     [], [], [], [], [], [], [], [], [], [],
+//     []
+// ]
+
+const appointments = [
+  // va bene come "guscio", qui dentro però ci dovranno finire tanti array
+  // quanti sono i giorni del mese
+]
+
 // divido il codice in FUNZIONI, in modo da tenerlo ordinato e riutilizzabile
 const printCurrentMonthInH1 = function () {
   // questa è una funzione che si occupa di riempire l'header
@@ -68,6 +87,34 @@ const numberOfDaysInThisMonth = function () {
   // ti fornisce il dato e con il return puoi utilizzare questo dato successivamente
 }
 
+const unselectPreviousCell = function () {
+  // lo scopo di questa funzione è ripulire le celle da eventuali classi "selected"
+
+  // approccio BULLDOZER
+  // trovo un array di TUTTE LE CELLE
+  const allTheCells = document.getElementsByClassName('day')
+  for (let i = 0; i < allTheCells.length; i++) {
+    // per ogni cella, rimuovo un eventuale classe "selected"
+    allTheCells[i].classList.remove('selected')
+    // questa operazione NON danneggia eventuali celle che NON hanno la classe "selected"
+  }
+
+  // approccio "sniper"
+  // vado a trovare la precedente cella con "selected"
+  // ...
+  // e gliela tolgo
+  // ...
+}
+
+const changeDayInSpan = function (i) {
+  console.log('I VALE', i)
+  // prendo il valore della cella su cui sto cliccando e lo inserisco nello span
+  // "Click on a Day", a sx del form
+  const spanToReplace = document.getElementById('newMeetingDay')
+  spanToReplace.innerText = i + 1
+  spanToReplace.classList.add('hasDay')
+}
+
 const createDayCells = function () {
   // qui creerò tutte le celle per la sezione "calendar"
   // le individuo grazie al numero dei giorni del mese corrente, che mi dirà
@@ -85,11 +132,35 @@ const createDayCells = function () {
   for (let i = 0; i < daysInThisMonth; i++) {
     // 31 volte (in ottobre)
     // per ogni giorno del mese...
-    // creo una cella
+
+    // ...riempio la "cassettiera" con un "cassetto"
+    appointments.push([])
+    // alla fine del for avrà generato per ottobre 31 sotto-array
+
+    // ...creo una cella
     const dayCell = document.createElement('div')
     // <div></div>
     dayCell.classList.add('day') // applico una classe CSS
     // <div class="day"></div>
+
+    // prima di proseguire, rendo la cella CLICCABILE
+    dayCell.addEventListener('click', function (e) {
+      // prima cosa: togliamo la classe "selected" da qualsiasi precedente selezione
+      unselectPreviousCell()
+
+      // "selezioniamo" la cella (diamogli la classe "selected")
+      dayCell.classList.add('selected')
+
+      // cambio il contenuto dello span a sx del form
+      changeDayInSpan(i)
+      // questa funzione necessita dell'indice del for per funzionare,
+      // perchè deve riempire lo span in basso con il giorno del mese
+      // che recuperiamo grazie a i + 1
+      // poichè abbiamo spostato la funzione fuori dal ciclo for, la i
+      // non è più disponibile all'interno della funzione; per risolvere,
+      // passiamo la i alla funzione COME PARAMETRO, in modo che il suo
+      // i + 1 continui ad essere definito
+    })
 
     // abbiamo creato la cella, inseriamoci il contenuto
     const cellValue = document.createElement('h3')
@@ -115,3 +186,4 @@ const createDayCells = function () {
 // stampo il mese corrente nell'h1
 printCurrentMonthInH1() // <-- viene invocata all'avvio
 createDayCells() // <-- viene invocata all'avvio
+console.log('CASSETTIERA', appointments)
