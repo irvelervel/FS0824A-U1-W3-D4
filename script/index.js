@@ -182,8 +182,70 @@ const createDayCells = function () {
   }
 }
 
+const handleFormSubmit = function (e) {
+  // blocco prima di tutto il comportamento di default del browser
+  e.preventDefault()
+  console.log("Bloccato l'invio del form")
+  // ottimo! ora posso salvare l'evento che avevo compilato nel "cassetto"
+  // della giornata selezionata
+
+  // per salvare l'evento ci serve:
+  // giorno
+  const meetingDay = document.getElementById('newMeetingDay').innerText // '17'
+  // ora
+  const meetingTime = document.getElementById('newMeetingTime').value // '15:30'
+  // .value perchè è un input field!
+  // nome
+  const meetingName = document.getElementById('newMeetingName').value // 'Dentista'
+
+  // ora creiamo la stringa completa da salvare nel "cassetto"
+  const eventString = meetingTime + ' - ' + meetingName // '15:30 - Dentista'
+
+  // abbiamo salvato correttamente la stringa con l'ora e il nome dell'evento
+  // ci manca solo da capire DOVE (in quale cassetto) salvarla
+  // n.b.! il giorno recuperato dallo span NON È il cassetto giusto!
+  // il cassetto giusto sarebbe giorno - 1
+  const drawerIndex = parseInt(meetingDay) - 1 // da '17' -> 16
+
+  appointments[drawerIndex].push(eventString)
+  console.log('CASSETTIERA DOPO SALVATAGGIO', appointments)
+
+  // svuotiamo gli input
+  // ri-trovo il form e lo resetto
+  document.getElementById('meeting-form').reset()
+
+  // dopo aver salvato l'evento nel cassetto drawerIndex, invochiamo
+  // la funzione showAppointments per far vedere gli eventi esistenti in questo giorno
+  showAppointments(drawerIndex)
+}
+
+const showAppointments = function (index) {
+  // questa funzione si occuperà di:
+  // - prelevare gli eventi salvati nel cassetto desiderato
+  const selectedDayAppointments = appointments[index]
+  // ci recuperiamo un riferimento alla lista non ordinata nella section appointments
+  const appointmentsList = document.getElementById('appointments-list')
+  // SVUOTIAMO LA LISTA di valori precedenti
+  appointmentsList.innerHTML = ''
+  // - dovrà generare tanti <li> quante sono le stringhe contenute nel cassettino
+  for (let i = 0; i < selectedDayAppointments.length; i++) {
+    const newLi = document.createElement('li')
+    newLi.innerText = selectedDayAppointments[i] // "12:00 - Pranzo"
+    // appendiamo l'li al DOM
+    appointmentsList.appendChild(newLi)
+  }
+  // mettiamo display: block alla section
+  const section = document.getElementById('appointments')
+  section.style.display = 'block'
+}
+
 // qui invoco le funzioni che dovranno venire eseguite all'avvio della pagina
 // stampo il mese corrente nell'h1
 printCurrentMonthInH1() // <-- viene invocata all'avvio
 createDayCells() // <-- viene invocata all'avvio
 console.log('CASSETTIERA', appointments)
+
+// recuperare un riferimento al form degli eventi e salvarlo in una variabile
+const meetingForm = document.getElementById('meeting-form')
+// in modo da poter lavorare sul suo evento di submit
+meetingForm.addEventListener('submit', handleFormSubmit)

@@ -25,7 +25,7 @@
           <!-- questo span ha un valore iniziale di "Click on a Day" ma poi, appena cliccata una cella, prende il numero della cella cliccata -->
           <span id="newMeetingDay">Click on a Day</span>
         </div>
-        <form>
+        <form id="meeting-form">
           <div>
             <label for="newMeetingTime"><h4>Meeting Time</h4></label>
             <input id="newMeetingTime" type="time" required />
@@ -45,9 +45,9 @@
           </div>
         </form>
       </section>
-      <section>
+      <section id="appointments">
         <h2>Appointments for the Day:</h2>
-        <ul>
+        <ul id="appointments-list">
           <!-- qui andranno a finire tutti gli appuntamenti della giornata, sempre che ce ne siano (altrimenti tutta questa section verrà nascosta) -->
         </ul>
       </section>
